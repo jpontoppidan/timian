@@ -31,7 +31,7 @@ function Man() {
 		} else {
 			this.x += this.velocity
 		}
-		rect(this.x, this.y, 20, 20)
+		rect(this.x, this.y, 30, 20)
 	}
 
 	this.move = function(direction) {
