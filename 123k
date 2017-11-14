@@ -1,0 +1,37 @@
+     /* this.show = function() {
+		if ((this.x + this.velocity) > 500){
+			this.x = 500
+			this.velocity = -this.velocity
+		} else if ((this.x + this.velocity)<0 ) {
+			this.x = 0
+			this.velocity = -this.velocity
+		} else {
+			this.x += this.velocity
+		}
+    }
+ this.move = function(direction) {	
+        this.velocity += direction
+	}
+    this.jump = function(direction) {
+        this.velocity += direction
+    } 
+ }*/
+ /*function Jump() {
+     this.velocity = 0
+        man.velocity.y = JUMP;
+    
+    man.velocity.y += GRAVITY;
+    
+    if(man.position.y<0)
+      man.position.y = 0;
+    
+	
+} */
+
+this.setDir = function(dir) {
+    this.xdir = dir;
+  }
+
+  this.move = function(dir) {
+    this.x += this.xdir*5;
+  }
