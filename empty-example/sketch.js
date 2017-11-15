@@ -31,6 +31,7 @@ function setup(type) {
     man.depth = 10
     man.friction = 0.009
     man.maxSpeed = 25
+    man.scale=0.8
     //man.scale = 0.2
     ghosts = new Group();
     particleImage = loadImage("../empty-example/assets/particles.png")
@@ -38,25 +39,22 @@ function setup(type) {
     //BlackHole
     blackhole = createSprite(1350, height/2)
     song.loop()
-    follow = createSprite(blackhole.position.x, blackhole.position.y)
-    follow.scale = .5
-   // follow.debug = true
-
-    follow.friction = 0.8
+    
 
     blackhole.addAnimation("move", "../empty-example/assets/BlackHole/bh0001.png", "../empty-example/assets/BlackHole/bh0024.png");
     blackhole.changeAnimation("move")
     blackhole.setCollider("circle", 0, 0, 400)
-     blackhole.scale = 0.3
+     blackhole.scale = 0.2
     blackhole.mass = 2+blackhole.scale;
 
    // blackhole.debug = true
     blackhole.depth =10
     //blackhole.scale = 0.3
-    //blackhole.debug = true
+    blackhole.debug = true
     bullets = new Group()
     bhbs = new Group()
     bhb = new Group()
+    createFollow()
 
    setInterval(function(){
        //var angle = math.atan2(man.position.x/man.position.y)
@@ -85,7 +83,7 @@ function setup(type) {
            bullet.life = random(100, 200);
            bullet.debug = true
            bullet.setCollider("circle", 0, 0, 40)
-           bullet.scale = .5
+           bullet.scale = .4
            bhb.add(bullet);
          }
 
@@ -161,14 +159,14 @@ function setup(type) {
       man.velocity.x = 0;
       man.velocity.y = 0
       man.maxvel = 40
-
-    if (keyIsDown(LEFT_ARROW))
+     
+    if (keyDown(65))
     man.addSpeed(7, 180)
-    if (keyIsDown(RIGHT_ARROW))
+    if (keyDown(68))
    man.addSpeed(7, 0)
-    if(keyIsDown(UP_ARROW))
+    if(keyDown(87))
      man.addSpeed(7, 270)
-    if(keyIsDown(DOWN_ARROW))
+    if(keyDown(83))
      man.addSpeed(7, 90)
         //man.velocity.y += GRAVITY;
      man.collide(ghosts)
@@ -177,7 +175,7 @@ function setup(type) {
    }
   man.attractionPoint(4 , 1350, height/2)
   blackhole.overlap(bullets, blackholeHit)
-    follow.attractionPoint(8, man.position.x, man.position.y)
+    
 
    if (bhbs.overlap(man, bhbsHit)) {
        lives -= 1
@@ -186,15 +184,11 @@ function setup(type) {
     if(bhb.overlap(man, bhbHit)) {
         lives -= 1
     }
-    follow.overlap(man, manHit3)
-    follow.collide(ghosts)
+    
    if (ghosts.overlap(bhbs, bhbsHit)) {
 
    }
-     if (bullets.overlap(follow)) {
-     follow.life=0
-     bullets.add(follow)
-   }
+     
     ghosts.overlap(bhb, bhbHit)
        // bhb.life = 0
 
@@ -221,8 +215,7 @@ function setup(type) {
   // man.position.y--;
    //man.velocity.y = 0;
   // }
-
-     if(keyWentDown(33))
+     if(keyWentDown(81))
     {
     var bullet = createSprite(man.position.x, man.position.y);
     bullet.addImage(bulletImage);
@@ -230,8 +223,11 @@ function setup(type) {
     bullet.life = 300;
     bullet.attractionPoint(30, mouseX, mouseY),
     bullets.add(bullet);
+    bullet.debug = true
+    bullet.scale=0.9
+    //bullet.addcollider(circle, 20, 20)
     }
-    if(keyWentDown(36))
+    if(keyWentDown(69))  
      {
      var ghost = createSprite(man.position.x-100, man.position.y-100, 100, 100)
     ghost.position.x = man.position.x
@@ -241,13 +237,12 @@ function setup(type) {
 
     ghost.shapeColor = color(255)
     //ghost.addAnimation("../empty-example/assets/LargePlatform.png", "../empty-example/assets/LargePlatform.png");
-   // ghost.scale = 0.2
+   //ghost.scale = 0.2
     ghost.depht = 10
     ghosts.add(ghost)
     ghost.life = 300
      }
-
-
+ if (follow) follow.attractionPoint(8, man.position.x, man.position.y)
 
 drawSprites ()
  }
@@ -258,7 +253,7 @@ drawSprites ()
 
 
 
-  function keyIsPressed() {
+ /* function keyIsPressed() {
     if (key == 'q') {
       //ghosts = new Group();
         //for (var i = 0; i < 5; i++)
@@ -277,21 +272,34 @@ drawSprites ()
     ghost.life = 300
     }
 
-  }
- function bhbsHit(bhbs) {
+  }*/
+function bhbsHit(bullet, man) {
+    bullet.remove()
+}
+ 
+ function XbhbsHit(bhbs) {
     bhbs.life = 0
     for(var i=0; i<10; i++) {
     var p = createSprite(bhbs.position.x, bhbs.position.y);
     p.addImage(particleImage);
     p.setSpeed(random(10, 20), random(0, 360));
-    p.scale = 0.02
+    p.scale = 0.01
     p.friction = 0.03;
     p.life = 15;
     p.attractionPoint ( 8, 1000, height/2)
+    
   }
   }
-  function bhbHit(bhb) {
-        bhb.life = 0
+  function bhbHit(bullet, p) {
+        p.remove()
+      for(var i=0; i<7; i++) {
+    var p = createSprite(bullet.position.x, bullet.position.y);
+    p.addImage(particleImage);
+    p.setSpeed(random(10, 20), random(100, 250));
+    p.scale = 0.01
+    p.friction = 0.02;
+    p.life = 20;
+  }
 
   }
  function manHit3 (man, follow) {
@@ -300,7 +308,7 @@ drawSprites ()
 function blackholeHit(blackhole, bullet) {
     //var newType = blackhole.type-1;
     console.log(blackhole.scale)
-    blackhole.scale=blackhole.scale*.995
+    blackhole.scale=blackhole.scale*.975
 
 
     if(blackhole.scale<0.05) {
@@ -313,7 +321,7 @@ function blackholeHit(blackhole, bullet) {
     var p = createSprite(bullet.position.x, bullet.position.y);
     p.addImage(particleImage);
     p.setSpeed(random(10, 20), random(100, 250));
-    p.scale = 0.02
+    p.scale = 0.01
     p.friction = 0.02;
     p.life = 20;
   }
@@ -323,20 +331,18 @@ function blackholeHit(blackhole, bullet) {
     //blackhole.remove()
 
 }
-//if ( song.isPlaying()) {
-    //song.stop();
-    //value = 0;
-   // }
-   // else {
-   // song.loop();
-    //value = 255;
- // }
-//}
+ function createFollow() {
+    follow = createSprite(blackhole.position.x, blackhole.position.y)
+    follow.scale = .5
+   // follow.debug = true
 
- //function keyPressed() {
-  //       if (key == ' ') {
-    //    man.up()
-  //}
-//}
-
-
+    follow.friction = 0.8
+    follow.overlap(man, manHit3)
+    follow.collide(ghosts)
+    bullets.overlap(follow, followOverlap) 
+    
+ }
+function followOverlap(follow, man) {
+    follow.remove()
+    createFollow()
+}
