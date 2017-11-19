@@ -15,6 +15,7 @@ function preload() {
     particleImage = loadImage("../empty-example/assets/particles.png")
     bulletImage = loadImage("../empty-example/assets/bullet.png")
     blackhole = loadAnimation("../empty-example/assets/BlackHole/bh0001.png", "../empty-example/assets/BlackHole/bh0024.png")
+    manImage = loadImage("../empty-example/assets/Boo.png")
 }
 
 
@@ -26,7 +27,8 @@ function setup(type) {
     man.depth = 10
     man.friction = 0.009
     man.maxSpeed = 25
-    man.scale = 0.5
+    man.scale = 0.2
+    man.addImage(manImage)
         //man.scale = 0.2
     ghosts = new Group();
     particleImage = loadImage("../empty-example/assets/particles.png")
