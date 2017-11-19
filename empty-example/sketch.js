@@ -234,6 +234,7 @@ function draw() {
     if (follow) follow.attractionPoint(8, man.position.x, man.position.y)
 
     updateFollower()
+    showScore()
     drawSprites()
 }
 
@@ -319,10 +320,6 @@ function blackholeHit(blackhole, bullet) {
         p.life = 20;
     }
     bullet.remove()
-        //console.log("hi")
-        //blackhole.remove()
-        //blackhole.remove()
-
 }
 
 function updateFollower() {
@@ -342,3 +339,12 @@ function followOverlap(follow, man) {
     follow.remove()
     createFollow()
 }
+
+function showScore() {
+    fill(255);
+    noStroke();
+    textSize(50);
+    textAlign(RIGHT, RIGHT);
+    text(max(lives, 0), 0.9*width, 0.9*height);
+}
+
