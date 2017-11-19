@@ -1,4 +1,3 @@
-//var song;
 var value = 0
 var man
 var ghost
@@ -31,7 +30,7 @@ function setup(type) {
     man.depth = 10
     man.friction = 0.009
     man.maxSpeed = 25
-    man.scale = 0.8
+    man.scale = 0.5
         //man.scale = 0.2
     ghosts = new Group();
     particleImage = loadImage("../empty-example/assets/particles.png")
@@ -44,7 +43,7 @@ function setup(type) {
     blackhole.addAnimation("move", "../empty-example/assets/BlackHole/bh0001.png", "../empty-example/assets/BlackHole/bh0024.png");
     blackhole.changeAnimation("move")
     blackhole.setCollider("circle", 0, 0, 400)
-    blackhole.scale = 0.2
+    blackhole.scale = 0.3
     blackhole.mass = 2 + blackhole.scale;
 
     // blackhole.debug = true
@@ -144,7 +143,6 @@ function draw() {
     //ghost.position.x = mouseX;
     //ghost.position.y = mouseY;
     /*for (var i = 0; i < ghost.length; i++) {
-
    // ghost[i].addSpeed(0.1, 90);
     if (ghost[i].position.y > height) {
     ghost[i].velocity.y *= -1;
@@ -184,17 +182,23 @@ function draw() {
         lives -= 1
     }
 
-    if (bhbs.overlap(ghosts, bhbsHit))
+    bhbs.overlap(ghosts, XbhbsHit)
+    bhb.overlap(ghosts, XbhbHit)
 
-    ghosts.overlap(bhb, bhbHit)
 
-    if (lives < 0) {
+    if (lives <= 0) {
         text("You Lose!", width / 2, height / 2);
         textSize(100)
         frameRate(0)
         song.stop
         song.noLoop
         song.pause
+    }
+    if (blackhole.scale < 0.05) {
+        text("You win!", width/2, height/2);
+        textSize(200)
+        blackhole.life = 0
+        frameRate(0)
     }
 
 
@@ -206,18 +210,18 @@ function draw() {
     // man.position.y--;
     //man.velocity.y = 0;
     // }
-    if (keyWentDown(81)) {
+    if (keyWentDown(69)) {
         var bullet = createSprite(man.position.x, man.position.y);
         bullet.addImage(bulletImage);
         bullet.setSpeed(1 + man.getSpeed(), blackhole.postion);
         bullet.life = 300;
         bullet.attractionPoint(30, mouseX, mouseY),
-            bullets.add(bullet);
+        bullets.add(bullet);
         bullet.debug = false
         bullet.scale = 0.9
-            //bullet.addcollider(circle, 20, 20)
+        bullet.setCollider("circle", 0, 0, 20)
     }
-    if (keyWentDown(69)) {
+    if (keyWentDown(81)) {
         var ghost = createSprite(man.position.x - 100, man.position.y - 100, 100, 100)
         ghost.position.x = man.position.x
         ghost.position.y = man.position.y
@@ -252,9 +256,6 @@ function draw() {
    ghost.position.x = man.position.x
    ghost.position.y = man.position.y
    //ghost.debug
-
-
-
    ghost.shapeColor = color(255)
    //ghost.addAnimation("../empty-example/assets/LargePlatform.png", "../empty-example/assets/LargePlatform.png");
   // ghost.scale = 0.2
@@ -262,13 +263,22 @@ function draw() {
    ghosts.add(ghost)
    ghost.life = 300
    }
-
  }*/
 function bhbsHit(bullet, man) {
-    bullet.remove()
+    bullet.life = 0
+    for (var i = 0; i < 10; i++) {
+        var p = createSprite(bullet.position.x, bullet.position.y);
+        p.addImage(particleImage);
+        p.setSpeed(random(10, 20), random(0, 360));
+        p.scale = 0.01
+        p.friction = 0.03;
+        p.life = 15;
+        p.attractionPoint(8, 1000, height / 2)
+
+    }
 }
 
-function XbhbsHit(bhbs) {
+function XbhbsHit(bhbs, man) {
     bhbs.life = 0
     for (var i = 0; i < 10; i++) {
         var p = createSprite(bhbs.position.x, bhbs.position.y);
@@ -278,7 +288,6 @@ function XbhbsHit(bhbs) {
         p.friction = 0.03;
         p.life = 15;
         p.attractionPoint(8, 1000, height / 2)
-
     }
 }
 
@@ -295,6 +304,20 @@ function bhbHit(bullet, p) {
 
 }
 
+function XbhbHit(bhb, ghosts) {
+    bhb.remove()
+    for (var i = 0; i < 10; i++) {
+        var p = createSprite(bhb.position.x, bhb.position.y);
+        p.addImage(particleImage);
+        p.setSpeed(random(10, 20), random(0, 360));
+        p.scale = 0.01
+        p.friction = 0.03;
+        p.life = 15;
+        p.attractionPoint(8, 1000, height / 2)
+
+    }
+}
+
 function manHit3(man, follow) {
     lives -= 1
 }
@@ -303,13 +326,6 @@ function blackholeHit(blackhole, bullet) {
     //var newType = blackhole.type-1;
     console.log(blackhole.scale)
     blackhole.scale = blackhole.scale * .975
-
-
-    if (blackhole.scale < 0.05) {
-        text("you win!", width / 2, height / 2);
-        textSize(100)
-        blackhole.life = 0
-    }
 
     for (var i = 0; i < 10; i++) {
         var p = createSprite(bullet.position.x, bullet.position.y);
@@ -335,8 +351,9 @@ function createFollow() {
     follow.friction = 0.8
 }
 
-function followOverlap(follow, man) {
+function followOverlap(man, follow) {
     follow.remove()
+    follow.life=0
     createFollow()
 }
 
@@ -345,6 +362,6 @@ function showScore() {
     noStroke();
     textSize(50);
     textAlign(RIGHT, RIGHT);
-    text(max(lives, 0), 0.9*width, 0.9*height);
+    text(max(0, lives), 0.9*width, 0.9*height);
 }
 
