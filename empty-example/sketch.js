@@ -8,6 +8,7 @@ var bhbs
 var bhb
 var lives = 10
 var follow
+var time=0
 
 function preload() {
     song = loadSound('Soundtest.mp3');
@@ -16,14 +17,9 @@ function preload() {
     blackhole = loadAnimation("../empty-example/assets/BlackHole/bh0001.png", "../empty-example/assets/BlackHole/bh0024.png")
 }
 
+
 function setup(type) {
     createCanvas(1536, 793);
-
-
-    //man = new Man()
-
-
-
     man = createSprite(0, height / 2, 100, 100)
         //man.addAnimation("../empty-example/assets/Boo.png", "../empty-example/assets/Boo.png");
     man.debug = false
@@ -54,6 +50,10 @@ function setup(type) {
     bhbs = new Group()
     bhb = new Group()
     createFollow()
+
+    setInterval(function() {
+        time++
+    }, 1000)
 
     setInterval(function() {
         //var angle = math.atan2(man.position.x/man.position.y)
@@ -239,6 +239,7 @@ function draw() {
 
     updateFollower()
     showScore()
+    showTime()
     drawSprites()
 }
 
@@ -363,5 +364,22 @@ function showScore() {
     textSize(50);
     textAlign(RIGHT, RIGHT);
     text(max(0, lives), 0.9*width, 0.9*height);
+}
+
+function str_pad_left(string,pad,length) {
+    return (new Array(length+1).join(pad)+string).slice(-length);
+}
+
+function showTime() {
+    fill(255);
+    noStroke();
+    textSize(50);
+    textAlign(RIGHT, RIGHT);
+    var minutes = Math.floor(time / 60);
+    var seconds = time - minutes * 60;
+    var hours = Math.floor(time / 3600);
+
+    var finalTime = str_pad_left(minutes,'0',2)+':'+str_pad_left(seconds,'0',2);
+    text(finalTime, 200, 100);
 }
 
