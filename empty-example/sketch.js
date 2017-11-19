@@ -182,15 +182,11 @@ function draw() {
         lives -= 1
     }
 
-    if (bhbs.overlap(ghosts, XbhbsHit))
-    
-    if (bhb.overlap(ghosts, XbhbHit))
-    
-      
+    bhbs.overlap(ghosts, XbhbsHit)
+    bhb.overlap(ghosts, XbhbHit)
 
-    
 
-    if (lives < 1) {
+    if (lives <= 0) {
         text("You Lose!", width / 2, height / 2);
         textSize(100)
         frameRate(0)
@@ -203,7 +199,6 @@ function draw() {
         textSize(200)
         blackhole.life = 0
         frameRate(0)
-        
     }
 
 
@@ -243,6 +238,7 @@ function draw() {
     if (follow) follow.attractionPoint(8, man.position.x, man.position.y)
 
     updateFollower()
+    showScore()
     drawSprites()
 }
 
@@ -292,7 +288,6 @@ function XbhbsHit(bhbs, man) {
         p.friction = 0.03;
         p.life = 15;
         p.attractionPoint(8, 1000, height / 2)
-
     }
 }
 
@@ -332,9 +327,6 @@ function blackholeHit(blackhole, bullet) {
     console.log(blackhole.scale)
     blackhole.scale = blackhole.scale * .975
 
-
-    
-
     for (var i = 0; i < 10; i++) {
         var p = createSprite(bullet.position.x, bullet.position.y);
         p.addImage(particleImage);
@@ -344,10 +336,6 @@ function blackholeHit(blackhole, bullet) {
         p.life = 20;
     }
     bullet.remove()
-        //console.log("hi")
-        //blackhole.remove()
-        //blackhole.remove()
-
 }
 
 function updateFollower() {
@@ -361,7 +349,6 @@ function createFollow() {
     follow.scale = .5
         // follow.debug = true
     follow.friction = 0.8
-    
 }
 
 function followOverlap(man, follow) {
@@ -369,3 +356,12 @@ function followOverlap(man, follow) {
     follow.life=0
     createFollow()
 }
+
+function showScore() {
+    fill(255);
+    noStroke();
+    textSize(50);
+    textAlign(RIGHT, RIGHT);
+    text(max(0, lives), 0.9*width, 0.9*height);
+}
+
